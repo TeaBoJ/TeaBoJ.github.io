@@ -25,7 +25,7 @@
 <meta property="og:image" content="https://s1.ax1x.com/2020/06/24/NwJVzt.png">
 <meta property="og:image" content="https://s1.ax1x.com/2020/06/24/NwJaeU.png">
 <meta property="article:published_time" content="2020-06-24T12:40:55.000Z">
-<meta property="article:modified_time" content="2020-06-24T14:25:41.139Z">
+<meta property="article:modified_time" content="2020-06-24T14:41:53.158Z">
 <meta property="article:author" content="TeaBo">
 <meta property="article:tag" content="第五空间">
 <meta name="twitter:card" content="summary">
@@ -199,7 +199,7 @@
 <p>​    成功执行，然后尝试执行其他命令。但是由于过滤了<code>; _ &#39; |</code>等特殊字符，构造一句话然后连马有点麻烦，所以直接用纯取反或异或方法。这里选择的是取反。</p>
 <p><img src="https://s1.ax1x.com/2020/06/24/Nw1tEj.png" alt="Nw1tEj.png"></p>
 <p>同样成功执行phpinfo()</p>
-<p><a href="https://imgchr.com/i/Nw1srF" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/06/24/Nw1srF.png" alt="Nw1srF.png"></a></p>
+<p><img src="https://s1.ax1x.com/2020/06/24/Nw1srF.png" alt="Nw1srF.png"></p>
 <p>​    接下来就是找flag文件然后读取</p>
 <ul>
 <li><h4 id="列目录"><a href="#列目录" class="headerlink" title="列目录"></a>列目录</h4></li>
@@ -216,12 +216,11 @@
 </li>
 </ol>
 <p>   执行结果如下：</p>
-<p><a href="https://imgchr.com/i/Nw8acV" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/06/24/Nw8acV.png" alt="Nw8acV.png"></a></p>
+<p><img src="https://s1.ax1x.com/2020/06/24/Nw8acV.png" alt="Nw8acV.png"></p>
 <p>当前目录下有flag.php</p>
 <ul>
 <li><h4 id="读flag-php"><a href="#读flag-php" class="headerlink" title="读flag.php"></a>读flag.php</h4><p>构造<code>highlight_file(flag.php)</code></p>
-<p><a href="https://imgchr.com/i/Nw8Ojf" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/06/24/Nw8Ojf.png" alt="Nw8Ojf.png"></a></p>
-<p>成功读取flag.php</p>
+<p><img src="https://s1.ax1x.com/2020/06/24/Nw8Ojf.png" alt="Nw8Ojf.png"></p>
 <p><img src="https://s1.ax1x.com/2020/06/24/Nw8xHg.png" alt="Nw8xHg.png"></p>
 </li>
 </ul>
@@ -230,11 +229,11 @@
 
 <p>​    传入任意两个参数，经过WAF判断有无<code>/log|flag|hist|dict|etc|file|write/i</code>后分别取他们的key和value值，绕过2个if判断只需get传入2个键值key不等，值value相等的参数即可。最后将value赋值给url变量，然后读取文件并打印出来。</p>
 <p>​    绕过黑名单只需将协议内容全URL编码，然后<code>curl_exec()</code>带出结果。</p>
-<p><a href="https://imgchr.com/i/NwJVzt" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/06/24/NwJVzt.png" alt="NwJVzt.png"></a></p>
+<p><img src="https://s1.ax1x.com/2020/06/24/NwJVzt.png" alt="NwJVzt.png"></p>
 <p><code>file:///var/www/html/flag.php</code>   :  <code>%66%69%6C%65%3A%2F%2F%2F%76%61%72%2F%77%77%77%2F%68%74%6D%6C%2F%66%6C%61%67%2E%70%68%70</code></p>
 <p>传入任意2个Get参数，值等于上述编码结果。</p>
 <p><code>?key1=编码内容&amp;key2=编码内容</code></p>
-<p><a href="https://imgchr.com/i/NwJaeU" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/06/24/NwJaeU.png" alt="NwJaeU.png"></a></p>
+<p><img src="https://s1.ax1x.com/2020/06/24/NwJaeU.png" alt="NwJaeU.png"></p>
 <p>—–待补充—–</p>
 
       
