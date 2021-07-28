@@ -8,12 +8,10 @@
   <link rel="dns-prefetch" href="https://teaboj.github.io">
   <title>Commons Collections 2 | TeaBo’s 树洞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="序言前面分析了CC1 链，其是有版本限制的，在JDK 1.8 8u71版本以后，对AnnotationInvocationHandler的readObject进行了改写，导致高版本JDK无法使用CC1。 CC2利用的是cc4.0,因为cc3.2-3.1中TransformingComparator没有继承Serializable，所以无法进行java反序列化。   CC2链 并不是使用 Annot">
-<meta property="og:type" content="article">
+  <meta property="og:type" content="article">
 <meta property="og:title" content="Commons Collections 2">
 <meta property="og:url" content="https://teaboj.github.io/2021/07/27/Commons-Collections-2/index.html">
 <meta property="og:site_name" content="TeaBo’s 树洞">
-<meta property="og:description" content="序言前面分析了CC1 链，其是有版本限制的，在JDK 1.8 8u71版本以后，对AnnotationInvocationHandler的readObject进行了改写，导致高版本JDK无法使用CC1。 CC2利用的是cc4.0,因为cc3.2-3.1中TransformingComparator没有继承Serializable，所以无法进行java反序列化。   CC2链 并不是使用 Annot">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://z3.ax1x.com/2021/07/28/WIxiCV.png">
 <meta property="og:image" content="https://z3.ax1x.com/2021/07/28/WIxJDH.png">
@@ -63,7 +61,7 @@
 <meta property="og:image" content="https://teaboj.github.io/2021/07/27/Commons-Collections-2/Commons-Collections-2/image-20210728114324756.png">
 <meta property="og:image" content="https://teaboj.github.io/2021/07/27/Commons-Collections-2/Commons-Collections-2/image-20210728113855433.png">
 <meta property="article:published_time" content="2021-07-27T09:55:23.000Z">
-<meta property="article:modified_time" content="2021-07-28T05:39:14.355Z">
+<meta property="article:modified_time" content="2021-07-28T06:04:36.392Z">
 <meta property="article:author" content="TeaBo">
 <meta property="article:tag" content="java代码审计">
 <meta name="twitter:card" content="summary">
@@ -238,7 +236,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h3><p>前面分析了CC1 链，其是有版本限制的，在JDK 1.8 8u71版本以后，对AnnotationInvocationHandler的readObject进行了改写，导致高版本JDK无法使用CC1。</p>
+        <h3 id="序言"><a href="#序言" class="headerlink" title="序言"></a><a id="more"></a>序言</h3><p>前面分析了CC1 链，其是有版本限制的，在JDK 1.8 8u71版本以后，对AnnotationInvocationHandler的readObject进行了改写，导致高版本JDK无法使用CC1。</p>
 <p>CC2利用的是cc4.0,因为cc3.2-3.1中TransformingComparator没有继承Serializable，所以无法进行java反序列化。</p>
 <p><img src="https://z3.ax1x.com/2021/07/28/WIxiCV.png" alt="WIxiCV.png"></p>
 <p><img src="https://z3.ax1x.com/2021/07/28/WIxJDH.png" alt="WIxJDH.png"></p>
