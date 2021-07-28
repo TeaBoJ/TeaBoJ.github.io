@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W42lsH.png">
 <meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4fowj.png">
 <meta property="article:published_time" content="2021-07-27T05:55:34.000Z">
-<meta property="article:modified_time" content="2021-07-27T07:11:28.656Z">
+<meta property="article:modified_time" content="2021-07-28T00:50:57.860Z">
 <meta property="article:author" content="TeaBo">
 <meta property="article:tag" content="java代码审计">
 <meta name="twitter:card" content="summary">
@@ -249,7 +249,7 @@
 <p>在URLDNS链部分与上面分析的没出入，但是注意到<code>ysoserialize.URLDNS</code>并没有通过反射来防止在生成payload时触发<code>getHostAdress()</code></p>
 <p><a href="https://imgtu.com/i/W4gqMQ" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4gqMQ.png" alt="W4gqMQ.png"></a></p>
 <p>而是在<code>SilentURLStreamHandler()</code>这个类中重写了<code>getHostAddress()</code>,这样在put过程中遇到<code>getHostAddress()</code>就直接返回Null了，不会发送请求。</p>
-<p><a href="https://imgtu.com/i/W42lsH" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W42lsH.png" alt="W42lsH.png"></a></p>
+<p><img src="https://z3.ax1x.com/2021/07/27/W42lsH.png" alt="W42lsH.png"></p>
 <p>那为什么在<code>readObject</code>时又能进入到正确的<code>getHostAddress()</code>呢</p>
 <p>是<code>URL.handler</code>是<code>transient</code>声明的，无法被序列化，所以在反序列化时依然能向dnslog发送请求</p>
 <p><a href="https://imgtu.com/i/W4fowj" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4fowj.png" alt="W4fowj.png"></a></p>
