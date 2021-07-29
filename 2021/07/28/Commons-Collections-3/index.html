@@ -8,12 +8,10 @@
   <link rel="dns-prefetch" href="https://teaboj.github.io">
   <title>Commons Collections 3 | TeaBo’s 树洞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="序言环境配置还是与CC1一样：java环境：1.7 , commons-collections: 3.1 如果说CC1是从AnnotationInvocationHandler的readOject入手，利用Map(proxy).entrySet()触发TransformedMap-&gt;checkSetValue()，进而调用ChainedTransformer-&gt;transform(">
-<meta property="og:type" content="article">
+  <meta property="og:type" content="article">
 <meta property="og:title" content="Commons Collections 3">
 <meta property="og:url" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/index.html">
 <meta property="og:site_name" content="TeaBo’s 树洞">
-<meta property="og:description" content="序言环境配置还是与CC1一样：java环境：1.7 , commons-collections: 3.1 如果说CC1是从AnnotationInvocationHandler的readOject入手，利用Map(proxy).entrySet()触发TransformedMap-&gt;checkSetValue()，进而调用ChainedTransformer-&gt;transform(">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/Q$@AJTJ%5BEV2%7DKJF6VB4%7DUP.png">
 <meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729195909769.png">
@@ -30,7 +28,7 @@
 <meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729201159698.png">
 <meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729201419416.png">
 <meta property="article:published_time" content="2021-07-28T06:10:44.000Z">
-<meta property="article:modified_time" content="2021-07-29T12:20:18.140Z">
+<meta property="article:modified_time" content="2021-07-29T12:29:28.366Z">
 <meta property="article:author" content="TeaBo">
 <meta property="article:tag" content="java代码审计">
 <meta name="twitter:card" content="summary">
@@ -205,9 +203,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
-
-<h3 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h3><p>环境配置还是与CC1一样：java环境：1.7 , commons-collections: 3.1</p>
+        <h3 id="序言"><a href="#序言" class="headerlink" title="序言"></a><a id="more"></a>序言</h3><p>环境配置还是与CC1一样：java环境：1.7 , commons-collections: 3.1</p>
 <p>如果说CC1是从<code>AnnotationInvocationHandler</code>的readOject入手，利用<code>Map(proxy).entrySet()</code>触发<code>TransformedMap-&gt;checkSetValue()</code>，进而调用<code>ChainedTransformer-&gt;transform()</code>，CC2是利用<code>InvokerTransformer.transform()</code>调用<code>newTransformer</code>去<code>加载字节码</code>RCE的话，那么CC3就像是<a href="https://teabo.top/2021/07/27/Commons-Collections-1/" target="_blank" rel="noopener">CC1</a>和<a href="https://teabo.top/2021/07/27/Commons-Collections-2/" target="_blank" rel="noopener">CC2</a>二者的<strong>结合</strong>。</p>
 <h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><h4 id="InstantiateTransformer"><a href="#InstantiateTransformer" class="headerlink" title="InstantiateTransformer"></a>InstantiateTransformer</h4><p>org.apache.commons.collections.functors.InstantiateTransformer</p>
 <p><img src="/2021/07/28/Commons-Collections-3/Q$@AJTJ%5BEV2%7DKJF6VB4%7DUP.png" alt="img"></p>
