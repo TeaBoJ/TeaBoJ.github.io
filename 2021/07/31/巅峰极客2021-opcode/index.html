@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://teaboj.github.io/2021/07/31/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22021-opcode/image-20210731224822081.png">
 <meta property="og:image" content="https://teaboj.github.io/2021/07/31/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22021-opcode/image-20210731224833918.png">
 <meta property="article:published_time" content="2021-07-31T14:09:46.000Z">
-<meta property="article:modified_time" content="2021-07-31T15:00:17.565Z">
+<meta property="article:modified_time" content="2021-07-31T15:04:46.591Z">
 <meta property="article:author" content="TeaBo">
 <meta property="article:tag" content="Web">
 <meta property="article:tag" content="巅峰极客">
@@ -253,7 +253,7 @@
 
 <p>但是发现还有一个R指令</p>
 <p><img src="/2021/07/31/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22021-opcode/image-20210731222811866.png" alt="image-20210731222811866"></p>
-<p>但是这样却发现还有一个R指令，又重新构造了一遍，确定已经没有R指令形式的函数的调用了，为什么还会这样呢？</p>
+<p>又重新构造了一遍，确定已经没有R指令形式的函数的调用了，为什么还会这样呢？</p>
 <p>看这个opcode出现R的位置，是在builtins globals处</p>
 <p>原来是 <strong>GLOBAL(‘builtins’,’globals’)()</strong> 这里带一个<strong>()</strong>，opcode给他计算成了R指令调用()</p>
 <p>能不能用 <code>OBJ(GLOBAL(&#39;builtins&#39;,&#39;globals&#39;),&#39;&#39;)</code>代替呢？</p>
